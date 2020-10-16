@@ -1,0 +1,88 @@
+.App {
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+  background: url(https://wallpapercave.com/wp/NV5qPJZ.jpg) no-repeat center bottom/cover;
+
+  &-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  &-header {
+    min-height: 100vh;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba($color: #ffffff, $alpha: .5);
+  }
+
+  &-form {
+    margin-bottom: 2rem;
+    background: #fff;
+    padding: 15px;
+  }
+
+  .form-group {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    
+    & + .form-group {
+      margin-top: 1rem;
+    }
+
+    label {
+      margin-right: .5rem;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+  }
+
+  &-money {
+    position: relative;
+
+    &__btn {
+      position: absolute;
+      right: 110px;
+      bottom: 26px;
+      cursor: pointer;
+      background: #eee;
+    }
+
+    &__serial {
+      position: absolute;
+      right: 94px;
+      bottom: 23px;
+      font-size: 30px;
+    }
+  }
+
+}
+
+
+@-webkit-keyframes fill {
+  to {
+    background-size:100% 0;
+  }
+}
+
+@keyframes fill {
+  to {
+    background-size:100% 0;
+  }
+}
+
+
+.cnh_holding button{
+  background: -webkit-linear-gradient( white , white) rgb(255,215,235) no-repeat 0 0;
+  background: linear-gradient( white , white) rgb(255,215,235) no-repeat 0 0;
+  mix-blend-mode: multiply;
+  background-size:  100% 100%;
+  -webkit-animation: fill 2s forwards;
+  animation: fill 2s forwards;
+}
