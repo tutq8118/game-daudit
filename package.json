@@ -9,7 +9,9 @@
     "antd": "^4.7.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "node-sass": "^4.14.1",
+    "react-click-n-hold": "^1.0.7"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,9 +33,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "node-sass": "^4.14.1",
-    "react-click-n-hold": "^1.0.7"
-  }
+  } 
 }
