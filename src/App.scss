@@ -2,6 +2,10 @@ img {
   max-width: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
 .App {
   text-align: center;
   color: #333;
@@ -9,7 +13,8 @@ img {
   background: url(https://wallpapercave.com/wp/NV5qPJZ.jpg) no-repeat center bottom/cover;
 
   &-logo {
-    height: 40vmin;
+    position: fixed;
+    top: 20px;
     pointer-events: none;
   }
   
@@ -49,25 +54,103 @@ img {
 
   &-money {
     position: relative;
+    margin: 10px;
+
+    &__img {
+      position: relative;
+      margin-bottom: 0;
+
+      &::after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 0;
+      }
+    }
 
     &__btn {
       position: absolute;
-      right: 110px;
-      bottom: 26px;
+      right: 10px;
+      bottom: 8px;
       cursor: pointer;
-      background: #eee;
+      background: #fff;
+      width: 104px;
+      height: 37px;
+      border: 1px solid #BBB;
+      font-weight: 700;
     }
 
     &__serial {
       position: absolute;
-      right: 94px;
-      bottom: 23px;
-      font-size: 30px;
+      right: 10px;
+      bottom: 8px;
+      font-size: 24px;
+    }
+
+    &__score {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 80px;
+    }
+
+    &--win {
+      .App-money__img {
+        &::after {
+          background: rgba($color: green, $alpha: .5);
+        }
+
+        &::before {
+          width: 150px;
+          height: 150px;
+          content: '';
+          background: url('./win.png') no-repeat center/cover;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, -105%);
+        }
+      }
+    }
+
+    &--lose {
+     .App-money__img {
+        &::after {
+          background: rgba($color: red, $alpha: .5);
+        }
+     }
+    }
+
+    &--draw {
+      .App-money__img {
+        &::after {
+          background: rgba($color: orange, $alpha: .5);
+        }
+      }
     }
   }
 
   &-list {
     display: flex;
+  }
+
+  &-action {
+    display: flex;
+
+    button {
+      font-size: 30px;
+      min-width: 200px;
+      height: auto;
+
+      + button {
+        margin-left: 10px;
+      }
+    }
   }
 
 }

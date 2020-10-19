@@ -14,7 +14,7 @@ const openNotification  = placement => {
   notification.info({
     message: 'Chưa nặn đủ thời gian',
     description:
-      'Hãy dí 2s trờ lên nhé!',
+      'Hãy nhấn và giữ 2s trờ lên nhé!',
     placement,
   });
 };
@@ -23,14 +23,17 @@ const { Option } = Select;
 
 function AppMoney(props) {
   return (
-    <div className="App-money">
-      <img className="App-money__img" src={money} alt="" />
-      {props.result !== 1 && (
+    <div className={props.result === 'win'? "App-money App-money--win": props.result === 'draw'? 'App-money App-money--draw': props.result === 'lose'? 'App-money App-money--lose': 'App-money'}>
+      <figure className="App-money__img">
+        <img src={money} alt="" />
+      </figure>
+      {!props.serial && (
         <ClickNHold time={1} onStart={props.start} onClickNHold={props.clickNHold} onEnd={props.end}>
-          <button className="App-money__btn">Nặn</button>
+          <button className="App-money__btn"><span>Nặn</span></button>
         </ClickNHold>
       )}
-      {props.result === 1 && <span className="App-money__serial">{props.serial}</span>}
+      {props.serial && <span className="App-money__serial">{props.serial}</span>}
+      {props.result !== '' && <strong className="App-money__score">{props.score}</strong>}
     </div>
   );
 }
@@ -40,10 +43,11 @@ function App() {
 
   const [mode, setMode] = useState('fast');
   const [fastMode, setFastMode] = useState(1);
+  const [freeMode, setFreeMode] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
   const localItems = localStorage.getItem('moneyItems')
     ? JSON.parse(localStorage.getItem('moneyItems'))
-    : [ { result: 0, serial: '' },
-        { result: 0, serial: '' }
+    : [ { serial: '', score: '', result: '' },
+        { serial: '', score: '', result: '' }
       ];
 
   const [items, setItems] = useState(localItems);
@@ -57,7 +61,7 @@ function App() {
   }
 
   function handleFreedomPicker(e) {
-    console.log(e);
+    setFreeMode(e);
   }
   function start(e){
     console.log('START'); 
@@ -74,12 +78,45 @@ function App() {
         var radomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
         var randomString = radomNumber.toString();
         var fullRandomString = randomString.padStart(8, '0');
+
+        var arr = fullRandomString.split('').map((e) => parseInt(e));
+        var score = 0;
+       
+        if (mode === 'fast') {
+          switch (fastMode) {
+            case 2:
+              score = arr.filter((e, i) => i % 2 === 0).reduce((a, b) => a + b) % 10;
+              break;
+            case 3:
+              score = arr.filter((e, i) => i % 2 === 1).reduce((a, b) => a + b) % 10;
+              break;
+            case 4:
+              score = arr.filter((e, i) => e % 2 === 0).reduce((a, b) => a + b) % 10;
+              break;
+            case 5:
+              score = arr.filter((e, i) => e % 2 === 1).reduce((a, b) => a + b) % 10;
+              break;
+            default:
+              score = arr.reduce((a, b) => a + b) % 10;
+          }
+        } else {
+          var totalScore = 0;
+          for (const i of freeMode) {
+            totalScore = totalScore + arr[i - 1];
+          }
+          score = totalScore % 10 === 0 ? 10 : totalScore % 10;
+        }
+
+        if (score === 0) {
+          score = 10;
+        }
         
         setItems([
           ...items.slice(0, index),
           {
-            result: 1,
             serial: fullRandomString,
+            score: score,
+            result: ''
           },
           ...items.slice(index + 1),
         ]);
@@ -87,8 +124,9 @@ function App() {
         const newItems = [
           ...items.slice(0, index),
           {
-            result: 1,
             serial: fullRandomString,
+            score: score,
+            result: ''
           },
           ...items.slice(index + 1),
         ];
@@ -99,8 +137,9 @@ function App() {
         setItems([
           ...items.slice(0, index),
           {
-            result: 0,
-            serial: ''
+            serial: '',
+            score: '',
+            result: ''
           },
           ...items.slice(index + 1),
         ]);
@@ -108,8 +147,9 @@ function App() {
         const newItems = [
           ...items.slice(0, index),
           {
-            result: 0,
             serial: '',
+            score: '',
+            result: ''
           },
           ...items.slice(index + 1),
         ];
@@ -124,32 +164,33 @@ function App() {
   }
 
   function handleFight(e) {
-    console.log(fastMode);
-     var arr1 = items[0].serial.split('').map((e) => parseInt(e));
-     var arr2 = items[1].serial.split('').map((e) => parseInt(e));
-    switch (fastMode) {
-      case 2:
-        
-        break;
-      case 3:
-        // code block
-        break;
-      default:
-        var score1 = arr1.reduce((a, b) => a + b) % 10;
-        var score2 = arr2.reduce((a, b) => a + b) % 10;
-    }
-    console.log(score1, score2);
-  }
-  function handleReset(e) {
+    var score1 = items[0].score;
+    var score2 = items[1].score;
+
+    if (score1 === '' || score2 === '') return;
+    
     setItems([
-      { result: 0, serial: '' },
-      { result: 0, serial: '' },
+      { ...items[0], score: score1, result: score1 > score2 ? 'win': score1 === score2 ? 'draw': 'lose' },
+      { ...items[1], score: score2, result: score2 > score1 ? 'win': score1 === score2 ? 'draw': 'lose' },
     ]);
     localStorage.setItem(
       'moneyItems',
       JSON.stringify([
-        { result: 0, serial: '' },
-        { result: 0, serial: '' },
+        { ...items[0], score: score1, result: score1 > score2 ? 'win': score1 === score2 ? 'draw': 'lose'  },
+        { ...items[1], score: score2, result: score2 > score1 ? 'win': score1 === score2 ? 'draw': 'lose' },
+      ])
+    );
+  }
+  function handleReset(e) {
+    setItems([
+      { serial: '', score: '', result: '' },
+      { serial: '', score: '', result: '' },
+    ]);
+    localStorage.setItem(
+      'moneyItems',
+      JSON.stringify([
+        { serial: '', score: '', result: '' },
+        { serial: '', score: '', result: '' },
       ])
     );
   }
@@ -157,8 +198,8 @@ function App() {
   return (
     <div className="App">
       <div className="App-header">
-        <h1>Game Đầu Đít</h1>
-        <div className="App-form">
+        <h1 className="App-logo">Game Đầu Đít</h1>
+        {items[0].result === '' && items[1].result === '' && <div className="App-form">
           <div className="form-group">
             <Radio.Group name="radiogroup" defaultValue="fast" onChange={handleModePicker}>
               <Radio value="fast">Chơi nhanh</Radio>
@@ -181,7 +222,7 @@ function App() {
           {mode === 'freedom' && (
             <div className="form-group">
               <label htmlFor="">Chọn tổng các số thứ tự:</label>
-              <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker}>
+              <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={[1, 2, 3, 4, 5, 6, 7, 8]}>
                 <Checkbox value={1}>1</Checkbox>
                 <Checkbox value={2}>2</Checkbox>
                 <Checkbox value={3}>3</Checkbox>
@@ -194,19 +235,23 @@ function App() {
               ,
             </div>
           )}
-        </div>
+        </div>}
+        
         <div className="App-list">
           {items.map((item, index) => (
-            <AppMoney key={index} result={item.result} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} />
+            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} score={item.score} result={item.result} />
           ))}
         </div>
         <div className="App-action">
-          <button onClick={handleFight}  className="btn">
-            Chiến
+          {(items[0].score !== '' || items[1].score !== '') && <button onClick={handleReset}  className="ant-btn ant-btn-dangerous">
+            <span>Chơi lại</span>
+          </button>}
+          
+          {
+            items[0].result === '' && items[1].result === '' && items[0].score !== '' && items[1].score !== '' &&  <button onClick={handleFight}  className="ant-btn ant-btn-primary ant-btn-background-ghost">
+            <span>Chiến</span>
           </button>
-          <button onClick={handleReset}  className="btn">
-            Chơi lại
-          </button>
+          }
         </div>
       </div>
     </div>
