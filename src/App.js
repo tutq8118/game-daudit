@@ -41,6 +41,7 @@ function AppMoney(props) {
 
 function App() {
 
+  const [order, setOrder] = useState('asc');
   const [mode, setMode] = useState('fast');
   const [fastMode, setFastMode] = useState(1);
   const [freeMode, setFreeMode] = useState([1, 2, 3]);
@@ -54,6 +55,10 @@ function App() {
 
   function handleModePicker(e) {
     setMode(e.target.value);
+  }
+  
+  function handleOrderPicker(e) {
+    setOrder(e.target.value);
   }
 
   function handleFastModeChange(value) {
@@ -148,18 +153,31 @@ function App() {
     var score2 = items[1].score;
 
     if (score1 === '' || score2 === '') return;
-    
-    setItems([
-      { ...items[0], score: score1, result: score1 > score2 ? 'win': score1 === score2 ? 'draw': 'lose' },
-      { ...items[1], score: score2, result: score2 > score1 ? 'win': score1 === score2 ? 'draw': 'lose' },
-    ]);
-    localStorage.setItem(
-      'moneyItems',
-      JSON.stringify([
-        { ...items[0], score: score1, result: score1 > score2 ? 'win': score1 === score2 ? 'draw': 'lose'  },
-        { ...items[1], score: score2, result: score2 > score1 ? 'win': score1 === score2 ? 'draw': 'lose' },
-      ])
-    );
+    if (order === 'asc') {
+      setItems([
+        { ...items[0], score: score1, result: score1 > score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+        { ...items[1], score: score2, result: score2 > score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+      ]);
+      localStorage.setItem(
+        'moneyItems',
+        JSON.stringify([
+          { ...items[0], score: score1, result: score1 > score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+          { ...items[1], score: score2, result: score2 > score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+        ])
+      );
+    } else {
+      setItems([
+        { ...items[0], score: score1, result: score1 < score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+        { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+      ]);
+      localStorage.setItem(
+        'moneyItems',
+        JSON.stringify([
+          { ...items[0], score: score1, result: score1 < score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+          { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+        ])
+      );
+    }
   }
   function handleReset(e) {
     setItems([
@@ -173,6 +191,7 @@ function App() {
         { serial: '', score: '', result: '' },
       ])
     );
+    setOrder('asc');
     setMode('fast');
     setFastMode(1);
   }
@@ -181,14 +200,20 @@ function App() {
     <div className="App">
       <div className="App-header">
         <h1 className="App-logo">Game Đầu Đít</h1>
-        {(items[0].score !== '' || items[1].score !== '') &&
+        {(items[0].score !== '' || items[1].score !== '') && (
           <div className="App-rule">
             <strong>{mode === 'fast' ? 'Chơi nhanh' : 'Chơi tự do'}</strong>
             <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `[${freeMode}]`}</span>
           </div>
-        }
+        )}
         {items[0].score === '' && items[1].score === '' && (
           <div className="App-form">
+            <div className="form-group">
+              <Radio.Group name="radiogroup" defaultValue={order} onChange={handleOrderPicker}>
+                <Radio value="asc">To ăn</Radio>
+                <Radio value="desc">Bé ăn</Radio>
+              </Radio.Group>
+            </div>
             <div className="form-group">
               <Radio.Group name="radiogroup" defaultValue={mode} onChange={handleModePicker}>
                 <Radio value="fast">Chơi nhanh</Radio>

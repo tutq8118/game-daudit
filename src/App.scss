@@ -32,6 +32,8 @@ button {
   &-rule {
     font-size: 20px;
     display: flex;
+    padding: 10px;
+    background: #fff;
 
     span {
       margin-left: 10px;
@@ -158,6 +160,7 @@ button {
 
   &-list {
     display: flex;
+    margin: 3rem auto;
   }
 
   &-action {
