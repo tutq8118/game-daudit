@@ -23,13 +23,15 @@ const { Option } = Select;
 
 function AppMoney(props) {
   return (
-    <div className={props.result === 'win'? "App-money App-money--win": props.result === 'draw'? 'App-money App-money--draw': props.result === 'lose'? 'App-money App-money--lose': 'App-money'}>
-      <figure className="App-money__img">
+    <div className={props.result === 'win' ? 'App-money App-money--win' : props.result === 'draw' ? 'App-money App-money--draw' : props.result === 'lose' ? 'App-money App-money--lose' : 'App-money'}>
+      <figure className={props.serial ? 'App-money__img App-money__img--generated' : 'App-money__img'}>
         <img src={money} alt="" />
       </figure>
       {!props.serial && (
         <ClickNHold time={1} onStart={props.start} onClickNHold={props.clickNHold} onEnd={props.end}>
-          <button className="App-money__btn"><span>Nặn</span></button>
+          <button className="App-money__btn">
+            <span>Nặn</span>
+          </button>
         </ClickNHold>
       )}
       {props.serial && <span className="App-money__serial">{props.serial}</span>}
@@ -202,8 +204,9 @@ function App() {
         <h1 className="App-logo">Game Đầu Đít</h1>
         {(items[0].score !== '' || items[1].score !== '') && (
           <div className="App-rule">
-            <strong>{mode === 'fast' ? 'Chơi nhanh' : 'Chơi tự do'}</strong>
-            <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `[${freeMode}]`}</span>
+            <strong>Gọi cái:</strong>
+            <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `Tổng các số thứ tự [${freeMode}]`}</span>
+            <span>{order === 'asc' ? 'To ăn' : 'Bé ăn'}</span>
           </div>
         )}
         {items[0].score === '' && items[1].score === '' && (
