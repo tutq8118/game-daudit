@@ -43,7 +43,7 @@ function App() {
 
   const [mode, setMode] = useState('fast');
   const [fastMode, setFastMode] = useState(1);
-  const [freeMode, setFreeMode] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
+  const [freeMode, setFreeMode] = useState([1, 2, 3]);
   const localItems = localStorage.getItem('moneyItems')
     ? JSON.parse(localStorage.getItem('moneyItems'))
     : [ { serial: '', score: '', result: '' },
@@ -60,8 +60,8 @@ function App() {
     setFastMode(value);
   }
 
-  function handleFreedomPicker(e) {
-    setFreeMode(e);
+  function handleFreedomPicker(value) {
+    setFreeMode(value);
   }
   function start(e){
     console.log('START'); 
@@ -104,7 +104,7 @@ function App() {
           for (const i of freeMode) {
             totalScore = totalScore + arr[i - 1];
           }
-          score = totalScore % 10 === 0 ? 10 : totalScore % 10;
+          score = totalScore % 10;
         }
 
         if (score === 0) {
@@ -134,26 +134,6 @@ function App() {
         
       } else {
         openNotification('bottomRight');
-        setItems([
-          ...items.slice(0, index),
-          {
-            serial: '',
-            score: '',
-            result: ''
-          },
-          ...items.slice(index + 1),
-        ]);
-
-        const newItems = [
-          ...items.slice(0, index),
-          {
-            serial: '',
-            score: '',
-            result: ''
-          },
-          ...items.slice(index + 1),
-        ];
-        localStorage.setItem('moneyItems', JSON.stringify(newItems));
       }
     };
 
@@ -193,65 +173,77 @@ function App() {
         { serial: '', score: '', result: '' },
       ])
     );
+    setMode('fast');
+    setFastMode(1);
   }
 
   return (
     <div className="App">
       <div className="App-header">
         <h1 className="App-logo">Game Đầu Đít</h1>
-        {items[0].result === '' && items[1].result === '' && <div className="App-form">
-          <div className="form-group">
-            <Radio.Group name="radiogroup" defaultValue="fast" onChange={handleModePicker}>
-              <Radio value="fast">Chơi nhanh</Radio>
-              <Radio value="freedom">Chơi tự do</Radio>
-            </Radio.Group>
+        {(items[0].score !== '' || items[1].score !== '') &&
+          <div className="App-rule">
+            <strong>{mode === 'fast' ? 'Chơi nhanh' : 'Chơi tự do'}</strong>
+            <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `[${freeMode}]`}</span>
           </div>
-          {mode === 'fast' && (
+        }
+        {items[0].score === '' && items[1].score === '' && (
+          <div className="App-form">
             <div className="form-group">
-              <label htmlFor="">Gọi cái:</label>
-              <Select className="form-select" defaultValue={1} style={{ width: 220 }} onChange={handleFastModeChange}>
-                <Option value={1}>Tổng động viên</Option>
-                <Option value={2}>Tổng 1, 3, 5, 7</Option>
-                <Option value={3}>Tổng 2, 4, 6, 8</Option>
-                <Option value={4}>Tổng các số chẵn</Option>
-                <Option value={5}>Tổng các số lẻ</Option>
-              </Select>
+              <Radio.Group name="radiogroup" defaultValue={mode} onChange={handleModePicker}>
+                <Radio value="fast">Chơi nhanh</Radio>
+                <Radio value="freedom">Chơi tự do</Radio>
+              </Radio.Group>
             </div>
-          )}
+            {mode === 'fast' && (
+              <div className="form-group">
+                <label htmlFor="">Gọi cái:</label>
+                <Select className="form-select" defaultValue={fastMode} style={{ width: 220 }} onChange={handleFastModeChange}>
+                  <Option value={1}>Tổng động viên</Option>
+                  <Option value={2}>Tổng 1, 3, 5, 7</Option>
+                  <Option value={3}>Tổng 2, 4, 6, 8</Option>
+                  <Option value={4}>Tổng các số chẵn</Option>
+                  <Option value={5}>Tổng các số lẻ</Option>
+                </Select>
+              </div>
+            )}
 
-          {mode === 'freedom' && (
-            <div className="form-group">
-              <label htmlFor="">Chọn tổng các số thứ tự:</label>
-              <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={[1, 2, 3, 4, 5, 6, 7, 8]}>
-                <Checkbox value={1}>1</Checkbox>
-                <Checkbox value={2}>2</Checkbox>
-                <Checkbox value={3}>3</Checkbox>
-                <Checkbox value={4}>4</Checkbox>
-                <Checkbox value={5}>5</Checkbox>
-                <Checkbox value={6}>6</Checkbox>
-                <Checkbox value={7}>7</Checkbox>
-                <Checkbox value={8}>8</Checkbox>
-              </Checkbox.Group>
-              ,
-            </div>
-          )}
-        </div>}
-        
+            {mode === 'freedom' && (
+              <div className="form-group">
+                <label htmlFor="">Chọn tổng các số thứ tự:</label>
+                <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={freeMode}>
+                  <Checkbox value={1}>1</Checkbox>
+                  <Checkbox value={2}>2</Checkbox>
+                  <Checkbox value={3}>3</Checkbox>
+                  <Checkbox value={4}>4</Checkbox>
+                  <Checkbox value={5}>5</Checkbox>
+                  <Checkbox value={6}>6</Checkbox>
+                  <Checkbox value={7}>7</Checkbox>
+                  <Checkbox value={8}>8</Checkbox>
+                </Checkbox.Group>
+                ,
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="App-list">
           {items.map((item, index) => (
             <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} score={item.score} result={item.result} />
           ))}
         </div>
         <div className="App-action">
-          {(items[0].score !== '' || items[1].score !== '') && <button onClick={handleReset}  className="ant-btn ant-btn-dangerous">
-            <span>Chơi lại</span>
-          </button>}
-          
-          {
-            items[0].result === '' && items[1].result === '' && items[0].score !== '' && items[1].score !== '' &&  <button onClick={handleFight}  className="ant-btn ant-btn-primary ant-btn-background-ghost">
-            <span>Chiến</span>
-          </button>
-          }
+          {(items[0].score !== '' || items[1].score !== '') && (
+            <button onClick={handleReset} className="ant-btn ant-btn-dangerous">
+              <span>Chơi lại</span>
+            </button>
+          )}
+
+          {items[0].result === '' && items[1].result === '' && items[0].score !== '' && items[1].score !== '' && (
+            <button onClick={handleFight} className="ant-btn ant-btn-primary ant-btn-background-ghost">
+              <span>Chiến</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

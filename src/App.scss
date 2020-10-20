@@ -29,6 +29,19 @@ button {
     background: rgba($color: #ffffff, $alpha: .5);
   }
 
+  &-rule {
+    font-size: 20px;
+    display: flex;
+
+    span {
+      margin-left: 10px;
+
+      &::before {
+        content: '- ';
+      }
+    }
+  }
+
   &-form {
     margin-bottom: 2rem;
     background: #fff;
@@ -88,6 +101,7 @@ button {
       right: 10px;
       bottom: 8px;
       font-size: 24px;
+      filter: blur(2px);
     }
 
     &__score {
@@ -97,6 +111,13 @@ button {
       transform: translate(-50%, -50%);
       color: #fff;
       font-size: 80px;
+    }
+
+    &[class*='App-money--'] {
+      .App-money__serial {
+        filter: none;
+        color: #fff;
+      }
     }
 
     &--win {
@@ -121,7 +142,7 @@ button {
     &--lose {
      .App-money__img {
         &::after {
-          background: rgba($color: red, $alpha: .5);
+          background: rgba($color: red, $alpha: .8);
         }
      }
     }
@@ -129,7 +150,7 @@ button {
     &--draw {
       .App-money__img {
         &::after {
-          background: rgba($color: orange, $alpha: .5);
+          background: rgba($color: orange, $alpha: .8);
         }
       }
     }
