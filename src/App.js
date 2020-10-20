@@ -30,10 +30,11 @@ function AppMoney(props) {
       {!props.serial && (
         <ClickNHold time={1} onStart={props.start} onClickNHold={props.clickNHold} onEnd={props.end}>
           <button className="App-money__btn">
-            <span>Nặn</span>
+            <span className="App-money__btn-text">Nặn</span>
           </button>
         </ClickNHold>
       )}
+      
       {props.serial && <span className="App-money__serial">{props.serial}</span>}
       {props.result !== '' && <strong className="App-money__score">{props.score}</strong>}
     </div>
@@ -73,11 +74,41 @@ function App() {
   function start(e){
     console.log('START'); 
   } 
+
+  function clickNHold(item) {
+    const index = items.indexOf(item);
+    return (e) => {
+      setItems([
+        ...items.slice(0, index),
+        {
+          serial: '',
+          score: '',
+          result: '',
+          loading: true
+        },
+        ...items.slice(index + 1),
+      ]);
+
+      const newItems = [
+        ...items.slice(0, index),
+        {
+          serial: '',
+          score: '',
+          result: '',
+          loading: true
+        },
+        ...items.slice(index + 1),
+      ];
+      localStorage.setItem('moneyItems', JSON.stringify(newItems));
+      console.log('CLICK AND HOLD');
+      console.log(items);
+    };
+  }
     
   function handleEnd(item) {
     const index = items.indexOf(item);
-
     return (e, enough) => {
+      console.log('END');
       e.stopPropagation();
       if (enough) {
         var max = 99999999;
@@ -145,11 +176,7 @@ function App() {
     };
 
   };
-    
-  function clickNHold(e){
-    console.log('CLICK AND HOLD');  
-  }
-
+      
   function handleFight(e) {
     var score1 = items[0].score;
     var score2 = items[1].score;
@@ -257,7 +284,7 @@ function App() {
 
         <div className="App-list">
           {items.map((item, index) => (
-            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} score={item.score} result={item.result} />
+            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold(item)} serial={item.serial} score={item.score} result={item.result} />
           ))}
         </div>
         <div className="App-action">
