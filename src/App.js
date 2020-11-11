@@ -19,6 +19,15 @@ const openNotification  = placement => {
   });
 };
 
+const openNotification2  = placement => {
+  notification.info({
+    message: 'Bạn phải chọn ít nhất một số thứ tự',
+    description:
+      '',
+    placement,
+  });
+};
+
 const { Option } = Select;
 
 function AppMoney(props) {
@@ -92,7 +101,6 @@ function App() {
       
       localStorage.setItem('moneyItems', JSON.stringify(newItems));
       console.log('CLICK AND HOLD');
-      console.log(items);
     };
   }
     
@@ -129,6 +137,10 @@ function App() {
               score = arr.reduce((a, b) => a + b) % 10;
           }
         } else {
+          if (!freeMode.length) {
+            openNotification2('bottomRight');
+            return;
+          } 
           var totalScore = 0;
           for (const i of freeMode) {
             totalScore = totalScore + arr[i - 1];
