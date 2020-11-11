@@ -14,7 +14,7 @@ const openNotification  = placement => {
   notification.info({
     message: 'Chưa nặn đủ thời gian',
     description:
-      'Hãy nhấn và giữ 2s trờ lên nhé!',
+      'Nhấn và giữ tới khi thanh lực đầy',
     placement,
   });
 };
@@ -23,17 +23,18 @@ const { Option } = Select;
 
 function AppMoney(props) {
   return (
-    <div className={props.result === 'win' ? 'App-money App-money--win' : props.result === 'draw' ? 'App-money App-money--draw' : props.result === 'lose' ? 'App-money App-money--lose' : 'App-money'}>
+    <div className={props.result ? `App-money App-money--${props.result}` : 'App-money'}>
       <figure className={props.serial ? 'App-money__img App-money__img--generated' : 'App-money__img'}>
         <img src={money} alt="" />
       </figure>
       {!props.serial && (
         <ClickNHold time={1} onStart={props.start} onClickNHold={props.clickNHold} onEnd={props.end}>
           <button className="App-money__btn">
-            <span>Nặn</span>
+            <span className="App-money__btn-text">Nặn</span>
           </button>
         </ClickNHold>
       )}
+
       {props.serial && <span className="App-money__serial">{props.serial}</span>}
       {props.result !== '' && <strong className="App-money__score">{props.score}</strong>}
     </div>
@@ -47,11 +48,11 @@ function App() {
   const [mode, setMode] = useState('fast');
   const [fastMode, setFastMode] = useState(1);
   const [freeMode, setFreeMode] = useState([1, 2, 3]);
-  const localItems = localStorage.getItem('moneyItems')
-    ? JSON.parse(localStorage.getItem('moneyItems'))
-    : [ { serial: '', score: '', result: '' },
-        { serial: '', score: '', result: '' }
-      ];
+  const initItem = [
+    { serial: '', score: '', result: '' },
+    { serial: '', score: '', result: '' },
+  ];
+  const localItems = localStorage.getItem('moneyItems') ? JSON.parse(localStorage.getItem('moneyItems')) : initItem;
 
   const [items, setItems] = useState(localItems);
 
@@ -73,11 +74,32 @@ function App() {
   function start(e){
     console.log('START'); 
   } 
+
+  function clickNHold(item) {
+    const index = items.indexOf(item);
+    return (e) => {
+      const newItems = [
+        ...items.slice(0, index),
+        {
+          serial: '',
+          score: '',
+          result: '',
+          loading: true,
+        },
+        ...items.slice(index + 1),
+      ];
+      setItems(newItems);
+      
+      localStorage.setItem('moneyItems', JSON.stringify(newItems));
+      console.log('CLICK AND HOLD');
+      console.log(items);
+    };
+  }
     
   function handleEnd(item) {
     const index = items.indexOf(item);
-
     return (e, enough) => {
+      console.log('END');
       e.stopPropagation();
       if (enough) {
         var max = 99999999;
@@ -117,26 +139,18 @@ function App() {
         if (score === 0) {
           score = 10;
         }
-        
-        setItems([
-          ...items.slice(0, index),
-          {
-            serial: fullRandomString,
-            score: score,
-            result: ''
-          },
-          ...items.slice(index + 1),
-        ]);
 
         const newItems = [
           ...items.slice(0, index),
           {
             serial: fullRandomString,
             score: score,
-            result: ''
+            result: '',
           },
           ...items.slice(index + 1),
         ];
+        setItems(newItems);
+        
         localStorage.setItem('moneyItems', JSON.stringify(newItems));
         
       } else {
@@ -145,54 +159,29 @@ function App() {
     };
 
   };
-    
-  function clickNHold(e){
-    console.log('CLICK AND HOLD');  
-  }
-
+      
   function handleFight(e) {
     var score1 = items[0].score;
     var score2 = items[1].score;
 
+    var targetItem =
+      order === 'asc'
+        ? [
+            { ...items[0], score: score1, result: score1 > score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+            { ...items[1], score: score2, result: score2 > score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+          ]
+        : [
+            { ...items[0], score: score1, result: score1 < score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+            { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
+          ];
+
     if (score1 === '' || score2 === '') return;
-    if (order === 'asc') {
-      setItems([
-        { ...items[0], score: score1, result: score1 > score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-        { ...items[1], score: score2, result: score2 > score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-      ]);
-      localStorage.setItem(
-        'moneyItems',
-        JSON.stringify([
-          { ...items[0], score: score1, result: score1 > score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-          { ...items[1], score: score2, result: score2 > score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-        ])
-      );
-    } else {
-      setItems([
-        { ...items[0], score: score1, result: score1 < score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-        { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-      ]);
-      localStorage.setItem(
-        'moneyItems',
-        JSON.stringify([
-          { ...items[0], score: score1, result: score1 < score2 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-          { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
-        ])
-      );
-    }
+    setItems(targetItem);
+    localStorage.setItem('moneyItems', JSON.stringify(targetItem));
   }
   function handleReset(e) {
-    setItems([
-      { serial: '', score: '', result: '' },
-      { serial: '', score: '', result: '' },
-    ]);
-    localStorage.setItem(
-      'moneyItems',
-      JSON.stringify([
-        { serial: '', score: '', result: '' },
-        { serial: '', score: '', result: '' },
-      ])
-    );
+    setItems(initItem);
+    localStorage.setItem('moneyItems', JSON.stringify(initItem));
     setOrder('asc');
     setMode('fast');
     setFastMode(1);
@@ -237,7 +226,7 @@ function App() {
             )}
 
             {mode === 'freedom' && (
-              <div className="form-group">
+              <div className="form-group form-group--freedom">
                 <label htmlFor="">Chọn tổng các số thứ tự:</label>
                 <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={freeMode}>
                   <Checkbox value={1}>1</Checkbox>
@@ -257,7 +246,7 @@ function App() {
 
         <div className="App-list">
           {items.map((item, index) => (
-            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} score={item.score} result={item.result} />
+            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold(item)} serial={item.serial} score={item.score} result={item.result} />
           ))}
         </div>
         <div className="App-action">
@@ -269,7 +258,7 @@ function App() {
 
           {items[0].result === '' && items[1].result === '' && items[0].score !== '' && items[1].score !== '' && (
             <button onClick={handleFight} className="ant-btn ant-btn-primary ant-btn-background-ghost">
-              <span>Chiến</span>
+              <span>Xem kết quả</span>
             </button>
           )}
         </div>
