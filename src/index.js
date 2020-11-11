@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <HelmetProvider>
+      <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=yes" />
+        <title>Game Đầu Đít</title>
+      </Helmet>
+      <App />
+    </HelmetProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
