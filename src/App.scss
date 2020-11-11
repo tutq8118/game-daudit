@@ -26,7 +26,7 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba($color: #ffffff, $alpha: .5);
+    background: rgba($color: #ffffff, $alpha: .6);
   }
 
   &-rule {
@@ -60,13 +60,24 @@ button {
     display: flex; 
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
+    
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
     
     & + .form-group {
       margin-top: 1rem;
     }
 
-    label {
+    .ant-checkbox-wrapper {
+      width: 22%;
+
+      &:nth-child(5) {
+        margin-left: 0;
+      }
+    }
+
+    > label {
       margin-right: .5rem;
       font-size: 16px;
       white-space: nowrap;
@@ -140,7 +151,7 @@ button {
     &--win {
       .App-money__img {
         &::after {
-          background: rgba($color: green, $alpha: .5);
+          background: rgba($color: green, $alpha: .6);
         }
 
         &::before {
@@ -159,7 +170,7 @@ button {
     &--lose {
      .App-money__img {
         &::after {
-          background: rgba($color: red, $alpha: .8);
+          background: rgba($color: red, $alpha: .6);
         }
      }
     }
@@ -167,7 +178,7 @@ button {
     &--draw {
       .App-money__img {
         &::after {
-          background: rgba($color: orange, $alpha: .8);
+          background: rgba($color: orange, $alpha: .6);
         }
       }
     }
@@ -182,9 +193,11 @@ button {
     display: flex;
 
     button {
+      font-weight: 600;
       font-size: 30px;
-      min-width: 200px;
+      min-width: 140px;
       height: auto;
+      background: #fff !important;
 
       + button {
         margin-left: 10px;
@@ -192,6 +205,82 @@ button {
     }
   }
 
+  @media (max-width: 767px) {
+    &-list {
+      flex-direction: column;
+    }
+
+    &-header {
+      padding-top: 100px;
+      padding-bottom: 30px;
+    }
+
+    &-logo {
+      top: 0;
+      width: 100%;
+      background: #F1F1F1;
+      padding-bottom: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+      z-index: 1000;
+    }
+
+    &-form {
+      width: calc(100% - 20px);
+    }
+
+    .form-group--freedom {
+      flex-direction: column;
+
+      label {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+
+    &-action {
+      button {
+        font-size: 26px;
+      }
+    }
+
+    &-money {
+      & + .App-money {
+        margin-top: 2rem;
+      }
+
+      &--win {
+        &:first-child {
+          margin-top: 70px;
+        }
+
+        .App-money {
+          &__img {
+            &:before {
+                width: 90px;
+                height: 90px;
+                left: auto;
+                transform: translate(0%, -105%);
+                right: 0;
+            }
+          }
+        }
+      }
+
+      &--lose {
+        + .App-money--win {
+          margin-top: 7rem;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 374px) {
+    &-action {
+      button {
+        font-size: 20px;
+      }
+    }
+  }
 }
 
 
