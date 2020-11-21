@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
-// import logo from './logo.svg';
 import money from './money.jpg';
 
 import ClickNHold from 'react-click-n-hold';
-
 
 import { Select, Radio, Checkbox, notification } from 'antd';
 
@@ -15,15 +13,6 @@ const openNotification  = placement => {
     message: 'Chưa nặn đủ thời gian',
     description:
       'Nhấn và giữ tới khi thanh lực đầy',
-    placement,
-  });
-};
-
-const openNotification2  = placement => {
-  notification.info({
-    message: 'Bạn phải chọn ít nhất một số thứ tự',
-    description:
-      '',
     placement,
   });
 };
@@ -52,7 +41,6 @@ function AppMoney(props) {
 
 
 function App() {
-
   const [order, setOrder] = useState('asc');
   const [mode, setMode] = useState('fast');
   const [fastMode, setFastMode] = useState(1);
@@ -109,65 +97,60 @@ function App() {
     return (e, enough) => {
       console.log('END');
       e.stopPropagation();
-      if (enough) {
-        var max = 99999999;
-        var min = 0;
-        var radomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-        var randomString = radomNumber.toString();
-        var fullRandomString = randomString.padStart(8, '0');
-
-        var arr = fullRandomString.split('').map((e) => parseInt(e));
-        var score = 0;
-       
-        if (mode === 'fast') {
-          switch (fastMode) {
-            case 2:
-              score = arr.filter((e, i) => i % 2 === 0).reduce((a, b) => a + b) % 10;
-              break;
-            case 3:
-              score = arr.filter((e, i) => i % 2 === 1).reduce((a, b) => a + b) % 10;
-              break;
-            case 4:
-              score = arr.filter((e, i) => e % 2 === 0).reduce((a, b) => a + b) % 10;
-              break;
-            case 5:
-              score = arr.filter((e, i) => e % 2 === 1).reduce((a, b) => a + b) % 10;
-              break;
-            default:
-              score = arr.reduce((a, b) => a + b) % 10;
-          }
-        } else {
-          if (!freeMode.length) {
-            openNotification2('bottomRight');
-            return;
-          } 
-          var totalScore = 0;
-          for (const i of freeMode) {
-            totalScore = totalScore + arr[i - 1];
-          }
-          score = totalScore % 10;
-        }
-
-        if (score === 0) {
-          score = 10;
-        }
-
-        const newItems = [
-          ...items.slice(0, index),
-          {
-            serial: fullRandomString,
-            score: score,
-            result: '',
-          },
-          ...items.slice(index + 1),
-        ];
-        setItems(newItems);
-        
-        localStorage.setItem('moneyItems', JSON.stringify(newItems));
-        
-      } else {
-        openNotification('bottomRight');
+      if (!enough) {
+        openNotification('bottomRight'); return;
       }
+      var max = 99999999;
+      var min = 0;
+      var radomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+      var randomString = radomNumber.toString();
+      var fullRandomString = randomString.padStart(8, '0');
+
+      var arr = fullRandomString.split('').map((e) => parseInt(e));
+      var score = 0;
+      
+      if (mode === 'fast') {
+        switch (fastMode) {
+          case 2:
+            score = arr.filter((e, i) => i % 2 === 0).reduce((a, b) => a + b) % 10;
+            break;
+          case 3:
+            score = arr.filter((e, i) => i % 2 === 1).reduce((a, b) => a + b) % 10;
+            break;
+          case 4:
+            score = arr.filter((e, i) => e % 2 === 0).reduce((a, b) => a + b) % 10;
+            break;
+          case 5:
+            score = arr.filter((e, i) => e % 2 === 1).reduce((a, b) => a + b) % 10;
+            break;
+          default:
+            score = arr.reduce((a, b) => a + b) % 10;
+        }
+      } else {
+        var totalScore = 0;
+        for (const i of freeMode) {
+          totalScore = totalScore + arr[i - 1];
+        }
+        score = totalScore % 10;
+      }
+
+      if (score === 0) {
+        score = 10;
+      }
+
+      const newItems = [
+        ...items.slice(0, index),
+        {
+          serial: fullRandomString,
+          score: score,
+          result: '',
+        },
+        ...items.slice(index + 1),
+      ];
+      setItems(newItems);
+      
+      localStorage.setItem('moneyItems', JSON.stringify(newItems));
+      
     };
 
   };
@@ -240,7 +223,7 @@ function App() {
             {mode === 'freedom' && (
               <div className="form-group form-group--freedom">
                 <label htmlFor="">Chọn tổng các số thứ tự:</label>
-                <Checkbox.Group style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={freeMode}>
+                <Checkbox.Group className={freeMode.length === 1 ? 'ant-checkbox-group--disabled' : ''} style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={freeMode}>
                   <Checkbox value={1}>1</Checkbox>
                   <Checkbox value={2}>2</Checkbox>
                   <Checkbox value={3}>3</Checkbox>

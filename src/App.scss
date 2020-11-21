@@ -88,6 +88,14 @@ button {
       }
     }
 
+    .ant-checkbox-group {
+      &--disabled {
+        .ant-checkbox-wrapper-checked {
+          pointer-events: none;
+        }
+      }
+    }
+
     > label {
       margin-right: .5rem;
       font-size: 16px;
@@ -226,7 +234,7 @@ button {
 
     &-header {
       padding-top: 100px;
-      padding-bottom: 30px;
+      padding-bottom: 55px;
     }
 
     &-logo {
@@ -273,7 +281,7 @@ button {
                 width: 90px;
                 height: 90px;
                 left: auto;
-                transform: translate(0%, -105%);
+                transform: translate(0%, -100%);
                 right: 0;
             }
           }

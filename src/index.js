@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import * as serviceWorker from './serviceWorker';
+import ReactGA from 'react-ga';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,6 +17,8 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+ReactGA.initialize('UA-183252803-2');
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
