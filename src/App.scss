@@ -21,7 +21,7 @@ button {
   text-align: center;
   color: #333;
   font-size: 16px;
-  background: url(https://wallpapercave.com/wp/NV5qPJZ.jpg) no-repeat center bottom/cover;
+  background: url('./bg.jpg') no-repeat center bottom/cover;
 
   &-logo {
     position: fixed;
@@ -140,6 +140,10 @@ button {
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */
       user-select: none; /* Standard syntax */
+      
+      &:not(:hover) {
+        animation: scale 1.5s infinite;
+      }
     }
 
     &__serial {
@@ -315,6 +319,46 @@ button {
 @keyframes fill {
   to {
     background-size:100% 0;
+  }
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(.9);
+  }
+  
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(.9);
+  }
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+      box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
   }
 }
 

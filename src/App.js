@@ -69,33 +69,14 @@ function App() {
     setFreeMode(value);
   }
   function start(e){
-    console.log('START'); 
   } 
 
-  function clickNHold(item) {
-    const index = items.indexOf(item);
-    return (e) => {
-      const newItems = [
-        ...items.slice(0, index),
-        {
-          serial: '',
-          score: '',
-          result: '',
-          loading: true,
-        },
-        ...items.slice(index + 1),
-      ];
-      setItems(newItems);
-      
-      localStorage.setItem('moneyItems', JSON.stringify(newItems));
-      console.log('CLICK AND HOLD');
-    };
+  function clickNHold(e) {
   }
     
   function handleEnd(item) {
     const index = items.indexOf(item);
     return (e, enough) => {
-      console.log('END');
       e.stopPropagation();
       if (!enough) {
         openNotification('bottomRight'); return;
@@ -147,10 +128,9 @@ function App() {
         },
         ...items.slice(index + 1),
       ];
+
       setItems(newItems);
-      
       localStorage.setItem('moneyItems', JSON.stringify(newItems));
-      
     };
 
   };
@@ -233,7 +213,6 @@ function App() {
                   <Checkbox value={7}>7</Checkbox>
                   <Checkbox value={8}>8</Checkbox>
                 </Checkbox.Group>
-                ,
               </div>
             )}
           </div>
@@ -241,7 +220,7 @@ function App() {
 
         <div className="App-list">
           {items.map((item, index) => (
-            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold(item)} serial={item.serial} score={item.score} result={item.result} />
+            <AppMoney key={index} src={money} start={start} end={handleEnd(item)} clickNHold={clickNHold} serial={item.serial} score={item.score} result={item.result} />
           ))}
         </div>
         <div className="App-action">
