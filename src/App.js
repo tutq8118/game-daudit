@@ -150,7 +150,6 @@ function App() {
             { ...items[1], score: score2, result: score2 < score1 ? 'win' : score1 === score2 ? 'draw' : 'lose' },
           ];
 
-    if (score1 === '' || score2 === '') return;
     setItems(targetItem);
     localStorage.setItem('moneyItems', JSON.stringify(targetItem));
   }
@@ -169,27 +168,28 @@ function App() {
         {(items[0].score !== '' || items[1].score !== '') && (
           <div className="App-rule">
             <strong>Gọi cái:</strong>
-            <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `Tổng các số thứ tự [${freeMode}]`}</span>
+            <span>{mode === 'fast' && fastMode === 1 ? 'Tổng động viên' : mode === 'fast' && fastMode === 2 ? 'Tổng 1, 3, 5, 7' : mode === 'fast' && fastMode === 3 ? 'Tổng 2, 4, 6, 8' : mode === 'fast' && fastMode === 4 ? 'Tổng các số chẵn' : mode === 'fast' && fastMode === 5 ? 'Tổng các số lẻ' : `Tổng các số thứ tự [${freeMode.sort((a, b) => a - b)}]`}</span>
             <span>{order === 'asc' ? 'To ăn' : 'Bé ăn'}</span>
           </div>
         )}
         {items[0].score === '' && items[1].score === '' && (
           <div className="App-form">
-            <div className="form-group">
-              <Radio.Group name="radiogroup" defaultValue={order} onChange={handleOrderPicker}>
-                <Radio value="asc">To ăn</Radio>
-                <Radio value="desc">Bé ăn</Radio>
-              </Radio.Group>
-            </div>
+            <label htmlFor=""><strong>Chế độ chơi:</strong></label>
             <div className="form-group">
               <Radio.Group name="radiogroup" defaultValue={mode} onChange={handleModePicker}>
                 <Radio value="fast">Chơi nhanh</Radio>
                 <Radio value="freedom">Chơi tự do</Radio>
               </Radio.Group>
             </div>
+            <label htmlFor=""><strong>Gọi cái:</strong></label>
+            <div className="form-group">
+              <Radio.Group name="radiogroup" defaultValue={order} onChange={handleOrderPicker}>
+                <Radio value="asc">To ăn</Radio>
+                <Radio value="desc">Bé ăn</Radio>
+              </Radio.Group>
+            </div>
             {mode === 'fast' && (
               <div className="form-group">
-                <label htmlFor="">Gọi cái:</label>
                 <Select className="form-select" defaultValue={fastMode} style={{ width: 220 }} onChange={handleFastModeChange}>
                   <Option value={1}>Tổng động viên</Option>
                   <Option value={2}>Tổng 1, 3, 5, 7</Option>
@@ -202,7 +202,7 @@ function App() {
 
             {mode === 'freedom' && (
               <div className="form-group form-group--freedom">
-                <label htmlFor="">Chọn tổng các số thứ tự:</label>
+                <label htmlFor="">Chọn các số thứ tự:</label>
                 <Checkbox.Group className={freeMode.length === 1 ? 'ant-checkbox-group--disabled' : ''} style={{ width: '100%' }} onChange={handleFreedomPicker} defaultValue={freeMode}>
                   <Checkbox value={1}>1</Checkbox>
                   <Checkbox value={2}>2</Checkbox>

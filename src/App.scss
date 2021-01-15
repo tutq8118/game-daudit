@@ -62,9 +62,18 @@ button {
   }
 
   &-form {
-    margin-bottom: 2rem;
     background: #fff;
     padding: 15px;
+
+    > label {
+      display: block;
+      margin-bottom: 1.5rem;
+      font-size: 20px;
+    }
+
+    div + label {
+      margin-top: 2rem;
+    }
   }
 
   .form-group {
@@ -73,13 +82,9 @@ button {
     justify-content: center;
     
     &:not(:last-child) {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
-    & + .form-group {
-      margin-top: 1rem;
-    }
-
     .ant-checkbox-wrapper {
       width: 22%;
 
