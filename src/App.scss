@@ -44,9 +44,12 @@ button {
     font-size: 20px;
     display: flex;
     padding: 10px;
-    background: #fff;
+    background: rgba($color: #ffffff, $alpha: .6);
     flex-direction: column;
     align-items: baseline;
+    min-width: 250px;
+    max-width: calc(100% - 20px);
+    border-radius: 5px;
 
     strong {
       text-align: center;
@@ -62,8 +65,9 @@ button {
   }
 
   &-form {
-    background: #fff;
+    background: rgba($color: #ffffff, $alpha: .6);
     padding: 15px;
+    border-radius: 5px;
 
     > label {
       display: block;
@@ -99,6 +103,10 @@ button {
           pointer-events: none;
         }
       }
+    }
+
+    .ant-select-selector {
+      border-radius: 4px;
     }
 
     > label {
@@ -142,6 +150,7 @@ button {
       height: 37px;
       border: 1px solid #000;
       font-weight: 700;
+      border-radius: 4px;
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */
       user-select: none; /* Standard syntax */
@@ -229,6 +238,7 @@ button {
       min-width: 140px;
       height: auto;
       background: #fff !important;
+      border-radius: 5px;
 
       + button {
         margin-left: 10px;
@@ -330,40 +340,31 @@ button {
 @keyframes scale {
   0% {
     transform: scale(.9);
+    box-shadow: 0 0 0 0 rgba(222, 184, 135, 1);
   }
   
-  50% {
+  60% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(222, 184, 135, 0);
+  }
+
+  100% {
+    transform: scale(.9);
+    box-shadow: 0 0 0 0 rgba(222, 184, 135, 0);
+  }
+}
+
+@-webkit-keyframes scale {
+  0% {
+    transform: scale(.9);
+  }
+  
+  60% {
     transform: scale(1);
   }
 
   100% {
     transform: scale(.9);
-  }
-}
-
-@-webkit-keyframes pulse {
-  0% {
-    -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
-  }
-  70% {
-      -webkit-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
-  }
-  100% {
-      -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
-  }
-}
-@keyframes pulse {
-  0% {
-    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
-    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
-  }
-  70% {
-      -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
-      box-shadow: 0 0 0 10px rgba(204,169,44, 0);
-  }
-  100% {
-      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
-      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
   }
 }
 
