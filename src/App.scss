@@ -357,14 +357,17 @@ button {
 @-webkit-keyframes scale {
   0% {
     transform: scale(.9);
+    box-shadow: 0 0 0 0 rgba(222, 184, 135, 1);
   }
   
   60% {
     transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(222, 184, 135, 0);
   }
 
   100% {
     transform: scale(.9);
+    box-shadow: 0 0 0 0 rgba(222, 184, 135, 0);
   }
 }
 
